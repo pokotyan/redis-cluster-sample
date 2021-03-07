@@ -1,4 +1,4 @@
-version: 2
+version: 2.1
 references:
   working_directory: &working_directory /go/src/github.com/{{ORG_NAME}}/{{REPO_NAME}}
 executors:
