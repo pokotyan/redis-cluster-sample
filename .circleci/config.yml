@@ -1,0 +1,53 @@
+version: 2
+references:
+  working_directory: &working_directory /go/src/github.com/{{ORG_NAME}}/{{REPO_NAME}}
+executors:
+  build-excutor:
+    working_directory: *working_directory
+    docker:
+      - image: circleci/golang:1.15.3
+      - image: pokotyan/redis-cluster-sample
+        name: "redis_cluster1"
+        environment:
+          CLUSTER_PORTS: "7000 7001 7002 7003 7004 7005"
+          SLAVES_PER_MASTER: 1
+      - image: pokotyan/redis-cluster-sample
+        name: "redis_cluster2"
+        environment:
+          CLUSTER_PORTS: "7010 7011 7012 7013 7014 7015"
+          SLAVES_PER_MASTER: 1
+commands:
+  build_and_test:
+    steps:
+      - checkout
+      - restore_cache:
+          name: Restore go modules cache
+          keys:
+            - go-modules-cache-v1-{{ checksum "go.sum" }}
+
+      - run:
+          name: Set up dependent module
+          command: go mod download
+
+      - run:
+          name: Run test
+          command: |
+            go run main.go
+
+      - save_cache:
+          name: Save go modules cache
+          key: go-modules-cache-v1-{{ checksum "go.sum" }}
+          paths:
+            - "/go/pkg/mod"
+jobs:
+  build_and_test:
+    executor:
+      name: build-excutor
+    environment:
+      - REDIS_CLUSTER_1_NODES: "redis_cluster1:7000,redis_cluster1:7001,redis_cluster1:7002,redis_cluster1:7003,redis_cluster1:7004,redis_cluster1:7005"
+      - REDIS_CLUSTER_2_NODES: "redis_cluster2:7010,redis_cluster2:7011,redis_cluster2:7012,redis_cluster2:7013,redis_cluster2:7014,redis_cluster2:7015"
+workflows:
+  version: 2
+  build_and_test:
+    jobs:
+      - build_and_test
