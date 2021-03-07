@@ -30,9 +30,8 @@ commands:
           command: go mod download
 
       - run:
-          name: Run test
-          command: |
-            go run main.go
+          name: Connection to redis-cluster
+          command: go run main.go
 
       - save_cache:
           name: Save go modules cache
