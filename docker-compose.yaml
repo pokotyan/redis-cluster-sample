@@ -12,8 +12,6 @@ services:
       - redis_cluster1
       - redis_cluster2
     container_name: app
-    networks:
-      custom_network:
 
   redis_cluster1:
     build:
@@ -27,9 +25,6 @@ services:
     volumes:
       - ./tmp/redis/redis_cluster1:/data
     container_name: redis_cluster1
-    networks:
-      custom_network:
-        ipv4_address: 172.30.0.101
 
   redis_cluster2:
     build:
@@ -43,14 +38,3 @@ services:
     volumes:
       - ./tmp/redis/redis_cluster2:/data
     container_name: redis_cluster2
-    networks:
-      custom_network:
-        ipv4_address: 172.30.0.102
-
-networks:
-  custom_network:
-    driver: bridge
-    ipam:
-      driver: default
-      config:
-        - subnet: 172.30.0.0/24
