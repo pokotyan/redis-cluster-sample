@@ -1,6 +1,6 @@
-version: 2
+version: 2.1
 references:
-  working_directory: &working_directory /go/src/github.com/{{ORG_NAME}}/{{REPO_NAME}}
+  working_directory: &working_directory /go/src/redis-cluster-sample
 executors:
   build-excutor:
     working_directory: *working_directory
@@ -30,9 +30,8 @@ commands:
           command: go mod download
 
       - run:
-          name: Run test
-          command: |
-            go run main.go
+          name: Connection to redis-cluster
+          command: go run main.go
 
       - save_cache:
           name: Save go modules cache
@@ -46,6 +45,8 @@ jobs:
     environment:
       - REDIS_CLUSTER_1_NODES: "redis_cluster1:7000,redis_cluster1:7001,redis_cluster1:7002,redis_cluster1:7003,redis_cluster1:7004,redis_cluster1:7005"
       - REDIS_CLUSTER_2_NODES: "redis_cluster2:7010,redis_cluster2:7011,redis_cluster2:7012,redis_cluster2:7013,redis_cluster2:7014,redis_cluster2:7015"
+    steps:
+      - build_and_test
 workflows:
   version: 2
   build_and_test:
