@@ -1,0 +1,56 @@
+version: "3.7"
+services:
+  app:
+    build:
+      context: .
+      target: builder
+    command: go run main.go
+    environment:
+      REDIS_CLUSTER_1_NODES: "redis_cluster1:7000,redis_cluster1:7001,redis_cluster1:7002,redis_cluster1:7003,redis_cluster1:7004,redis_cluster1:7005"
+      REDIS_CLUSTER_2_NODES: "redis_cluster2:7010,redis_cluster2:7011,redis_cluster2:7012,redis_cluster2:7013,redis_cluster2:7014,redis_cluster2:7015"
+    depends_on:
+      - redis_cluster1
+      - redis_cluster2
+    container_name: app
+    networks:
+      custom_network:
+
+  redis_cluster1:
+    build:
+      context: .
+      dockerfile: DockerfileRedisCluster
+    ports:
+      - 7000-7005:7000-7005
+    environment:
+      CLUSTER_PORTS: "7000 7001 7002 7003 7004 7005"
+      SLAVES_PER_MASTER: 1
+    volumes:
+      - ./tmp/redis/redis_cluster1:/data
+    container_name: redis_cluster1
+    networks:
+      custom_network:
+        ipv4_address: 172.30.0.101
+
+  redis_cluster2:
+    build:
+      context: .
+      dockerfile: DockerfileRedisCluster
+    ports:
+      - 7010-7015:7010-7015
+    environment:
+      CLUSTER_PORTS: "7010 7011 7012 7013 7014 7015"
+      SLAVES_PER_MASTER: 1
+    volumes:
+      - ./tmp/redis/redis_cluster2:/data
+    container_name: redis_cluster2
+    networks:
+      custom_network:
+        ipv4_address: 172.30.0.102
+
+networks:
+  custom_network:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.30.0.0/24

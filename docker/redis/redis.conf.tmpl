@@ -1,0 +1,10 @@
+port ${PORT}
+pidfile "/var/run/redis_${PORT}.pid"
+logfile "redis-${PORT}.log"
+dbfilename "dump-${PORT}.rdb"
+appendonly yes
+appendfilename "appendonly-${PORT}.aof"
+cluster-enabled yes
+cluster-config-file nodes-${PORT}.conf
+cluster-node-timeout 5000
+daemonize yes

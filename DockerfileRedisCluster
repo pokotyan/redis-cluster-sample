@@ -1,0 +1,8 @@
+FROM redis:5.0.6
+
+RUN apt-get update && apt-get install gettext-base
+
+COPY ./docker/redis/redis.conf.tmpl /usr/local/etc/redis/redis.conf.tmpl
+COPY ./docker/redis/init.sh /init.sh
+
+CMD ["/bin/bash", "/init.sh"]
