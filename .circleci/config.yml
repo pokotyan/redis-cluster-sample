@@ -1,6 +1,6 @@
 version: 2.1
 references:
-  working_directory: &working_directory /go/src/github.com/{{ORG_NAME}}/{{REPO_NAME}}
+  working_directory: &working_directory /go/src/redis-cluster-sample
 executors:
   build-excutor:
     working_directory: *working_directory
