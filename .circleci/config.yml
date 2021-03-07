@@ -46,6 +46,8 @@ jobs:
     environment:
       - REDIS_CLUSTER_1_NODES: "redis_cluster1:7000,redis_cluster1:7001,redis_cluster1:7002,redis_cluster1:7003,redis_cluster1:7004,redis_cluster1:7005"
       - REDIS_CLUSTER_2_NODES: "redis_cluster2:7010,redis_cluster2:7011,redis_cluster2:7012,redis_cluster2:7013,redis_cluster2:7014,redis_cluster2:7015"
+    steps:
+      - build_and_test
 workflows:
   version: 2
   build_and_test:
