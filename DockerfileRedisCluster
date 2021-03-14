@@ -4,5 +4,6 @@ RUN apt-get update && apt-get install gettext-base
 
 COPY ./docker/redis/redis.conf.tmpl /usr/local/etc/redis/redis.conf.tmpl
 COPY ./docker/redis/init.sh /init.sh
+COPY ./DockerfileRedisCluster ./tmp/redis/redis_cluster1/dump-* /usr/local/etc/redis/tmp/redis_cluster1/
 
 CMD ["/bin/bash", "/init.sh"]

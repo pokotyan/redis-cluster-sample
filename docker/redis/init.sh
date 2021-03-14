@@ -20,4 +20,8 @@ for port in $CLUSTER_PORTS; do
   nodes="$nodes ${IP}:${port}"
 done
 
-sh -c "${create_nodes_command} yes yes | redis-cli --cluster create${nodes} --cluster-replicas ${SLAVES_PER_MASTER} && tail -f /dev/null"
+if ! ls /usr/local/etc/redis/tmp/redis_cluster1/dump-*.rdb >/dev/null 2>&1; then
+  bash -c "${create_nodes_command}yes yes | redis-cli --cluster create${nodes} --cluster-replicas ${SLAVES_PER_MASTER} && tail -f /dev/null"
+else
+  bash -c "${create_nodes_command}tail -f /dev/null"
+fi
